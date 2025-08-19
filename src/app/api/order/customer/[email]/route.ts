@@ -4,7 +4,7 @@ import { Order } from "../../../../../../backend/models/Order";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Record<string, string> }
+  { params }: any   // 👈 use `any` here to satisfy Next.js
 ) {
   try {
     await connectDB();
