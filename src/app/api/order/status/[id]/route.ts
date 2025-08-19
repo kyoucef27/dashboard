@@ -2,20 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "../../../../../../backend/routes/mongodb";
 import { Order } from "../../../../../../backend/models/Order";
 
-interface OrderIdContext {
-  params: {
-    id: string;
-  };
-}
-
 export async function PUT(
   request: NextRequest,
-  { params }: OrderIdContext
+  { params }: { params: any }
 ) {
   try {
     await connectDB();
 
-    const orderId = params.id;
+    const { id } = params as { id: string };   
     const { status, note } = await request.json();
 
     // ✅ Validate status
@@ -27,7 +21,7 @@ export async function PUT(
     }
 
     // ✅ Find the order
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(id);
     if (!order) {
       return NextResponse.json(
         { success: false, message: "Order not found" },
@@ -58,7 +52,7 @@ export async function PUT(
 
     // ✅ Update and return
     const updatedOrder = await Order.findByIdAndUpdate(
-      orderId,
+      id,
       { $set: updates },
       { new: true }
     );
