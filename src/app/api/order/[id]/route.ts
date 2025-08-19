@@ -4,12 +4,12 @@ import { Order } from "../../../../../backend/models/Order";
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }   
+  { params }: any   
 ) {
   try {
     await connectDB();
 
-    const orderId = context.params.id;  
+    const orderId = params.id;
     const order = await Order.findById(orderId);
 
     if (!order) {
