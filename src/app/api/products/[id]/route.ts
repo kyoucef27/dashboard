@@ -3,21 +3,15 @@ import { connectDB } from "../../../../../backend/routes/mongodb";
 import { Product } from "../../../../../backend/models/Product";
 import cloudinary from "../../../../../backend/utils/cloudinary";
 
-type RouteContextWithId = {
-  params: {
-    id: string;
-  };
-};
-
 export async function GET(
   request: NextRequest,
-  { params }: RouteContextWithId
+  { params }: { params: any }
 ) {
   try {
     await connectDB();
 
-    const productId = params.id;
-    const product = await Product.findById(productId);
+    const { id } = params as { id: string };
+    const product = await Product.findById(id);
 
     if (!product) {
       return NextResponse.json(
@@ -26,10 +20,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(
-      { success: true, product },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, product }, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching product:", error);
     return NextResponse.json(
@@ -41,13 +32,13 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteContextWithId
+  { params }: { params: any }
 ) {
   try {
     await connectDB();
 
-    const productId = params.id;
-    const product = await Product.findById(productId);
+    const { id } = params as { id: string };
+    const product = await Product.findById(id);
 
     if (!product) {
       return NextResponse.json(
@@ -82,7 +73,7 @@ export async function DELETE(
     );
 
     // Delete product itself
-    await Product.findByIdAndDelete(productId);
+    await Product.findByIdAndDelete(id);
 
     return NextResponse.json(
       { success: true, message: "Product and images deleted successfully" },
