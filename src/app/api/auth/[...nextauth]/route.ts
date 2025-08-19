@@ -1,8 +1,7 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import { NextAuthOptions } from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -10,21 +9,21 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      // Only allow a specific GitHub account
-      return user.email === 'nadialuxe0@gmail.com';
+    async signIn({ user }) {
+    
+      return user.email === "nadialuxe0@gmail.com";
     },
-    async session({ session, token, user }) {
+    async session({ session }) {
       return session;
     },
   },
   pages: {
-    signIn: '/login',
-    error: '/login', // Error code passed in query string as ?error=
+    signIn: "/login",
+    error: "/login", 
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Export GET and POST handlers for NextAuth
+
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
