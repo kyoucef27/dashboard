@@ -2,15 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "../../../../../../backend/routes/mongodb";
 import { Order } from "../../../../../../backend/models/Order";
 
-interface EmailRouteContext {
-  params: {
-    email: string;
-  };
-}
-
 export async function GET(
   request: NextRequest,
-  { params }: EmailRouteContext   // ✅ Now works
+  { params }: { params: Record<string, string> }
 ) {
   try {
     await connectDB();
