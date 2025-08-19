@@ -2,17 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '../../../../../backend/routes/mongodb';
 import { Order } from '../../../../../backend/models/Order';
 
+
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
-    // Connect to MongoDB
     await connectDB();
     
-    const orderId = params.id;
-    
-    // Find the order by ID
+    const orderId = context.params.id;
+
     const order = await Order.findById(orderId);
     
     if (!order) {
@@ -23,10 +28,7 @@ export async function GET(
     }
     
     return NextResponse.json(
-      { 
-        success: true, 
-        order
-      },
+      { success: true, order },
       { status: 200 }
     );
     
