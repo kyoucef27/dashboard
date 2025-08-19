@@ -1,39 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '../../../../../../backend/routes/mongodb';
-import { Product } from '../../../../../../backend/models/Product';
+import { NextRequest, NextResponse } from "next/server";
+import { connectDB } from "../../../../../../backend/routes/mongodb";
+import { Product } from "../../../../../../backend/models/Product";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { specid: string } }
+  { params }: { params: any }  
 ) {
   try {
-    // Connect to MongoDB
     await connectDB();
-    
-    const specid = params.specid;
-    
-    // Find the product by specid
+
+    const { specid } = params as { specid: string };
+
     const product = await Product.findOne({ specid });
-    
+
     if (!product) {
       return NextResponse.json(
-        { success: false, message: 'Product not found' },
+        { success: false, message: "Product not found" },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(
-      { 
-        success: true, 
-        product
-      },
+      { success: true, product },
       { status: 200 }
     );
-    
   } catch (error: any) {
-    console.error('Error fetching product by specid:', error);
+    console.error("Error fetching product by specid:", error);
     return NextResponse.json(
-      { success: false, message: error.message || 'Failed to fetch product' },
+      { success: false, message: error.message || "Failed to fetch product" },
       { status: 500 }
     );
   }
